@@ -13,7 +13,7 @@ export default function SiteCard({ site }: { site: Site }) {
 
   return (
     <Link href={`/site/${site.slug}`} className="block group">
-      <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md border border-gray-100 transition-all duration-200 h-full flex flex-col">
+      <div className="bg-white rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md border border-gray-100 transition-all duration-200 h-full flex flex-col hover-scale">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">

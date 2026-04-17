@@ -150,3 +150,21 @@ export async function triggerScan(): Promise<ScanStatus> {
 export async function getScanStatus(): Promise<ScanStatus> {
   return get('scan-status');
 }
+
+export async function addKeyword(site: string, keyword: string, priority: string = 'medium') {
+  const res = await fetch(`${API}?endpoint=keywords/add`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site, keyword, priority })
+  });
+  return res.json();
+}
+
+export async function removeKeyword(site: string, keyword: string) {
+  const res = await fetch(`${API}?endpoint=keywords/remove`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site, keyword })
+  });
+  return res.json();
+}
