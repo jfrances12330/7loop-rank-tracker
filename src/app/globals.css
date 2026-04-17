@@ -33,6 +33,18 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', sans-serif;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.01);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 6px;
@@ -54,4 +66,51 @@ h1, h2, h3, h4, h5, h6 {
 }
 .sidebar-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(255,255,255,0.25);
+}
+
+/* Mobile header gradient */
+.mobile-header-gradient {
+  background: linear-gradient(180deg, rgba(124,58,237,0.12) 0%, rgba(124,58,237,0) 100%);
+}
+
+/* Scan-now branded gradient */
+.btn-scan-gradient {
+  background-image: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+}
+.btn-scan-gradient:hover:not(:disabled) {
+  background-image: linear-gradient(135deg, #4338CA 0%, #6D28D9 100%);
+}
+
+/* Logo glow (sidebar) */
+.logo-glow {
+  filter: drop-shadow(0 0 18px rgba(124,58,237,0.35));
+}
+
+/* Row hover in tables */
+tbody tr.kw-row:hover {
+  background-color: #EDE9FE;
+}
+
+/* Fix: contenido no se meta detrás del bottom tabs ni salga de pantalla */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Fix: prevenir overflow horizontal en TODA la app */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Fix: todos los contenedores respetan el ancho */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fix: gráficos y tablas no se salen */
+.recharts-wrapper, .recharts-surface {
+  max-width: 100% !important;
 }

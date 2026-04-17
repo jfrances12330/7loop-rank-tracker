@@ -1,7 +1,16 @@
 "use client";
 import { useState, useEffect, use } from "react";
 import ScanButton from "@/components/ScanButton";
-import { getSites, getKeywords, type Site, type Keyword } from "@/lib/api";
+import DeviceToggle from "@/components/DeviceToggle";
+import CompetitorsPanel from "@/components/CompetitorsPanel";
+import LocalGridPanel from "@/components/LocalGridPanel";
+import {
+  getSites,
+  getKeywords,
+  type Site,
+  type Keyword,
+  type Device,
+} from "@/lib/api";
 import Link from "next/link";
 import KeywordChart from "./KeywordChart";
 import {
@@ -20,7 +29,7 @@ interface Props {
 
 function PriorityBadge({ priority }: { priority: string }) {
   const styles: Record<string, string> = {
-    high: "bg-violet/10 text-violet border-violet/20",
+    high: "bg-gradient-to-r from-indigo to-violet text-white border-transparent",
     medium: "bg-indigo/10 text-indigo border-indigo/20",
     low: "bg-gray-100 text-neutral border-gray-200",
   };
@@ -29,7 +38,13 @@ function PriorityBadge({ priority }: { priority: string }) {
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${style}`}
     >
-      {priority === "high" ? "alta" : priority === "medium" ? "media" : priority === "low" ? "baja" : priority}
+      {priority === "high"
+        ? "alta"
+        : priority === "medium"
+          ? "media"
+          : priority === "low"
+            ? "baja"
+            : priority}
     </span>
   );
 }
@@ -38,8 +53,10 @@ export default function SitePage({ params }: Props) {
   const { slug } = use(params);
   const [site, setSite] = useState<Site | null>(null);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [device, setDevice] = useState<Device>("all");
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [selectedKeyword, setSelectedKeyword] = useState<string | null>(null);
 
   useEffect(() => {
     getSites()
@@ -51,18 +68,28 @@ export default function SitePage({ params }: Props) {
           return;
         }
         setSite(found);
-        return getKeywords(found.site_url);
       })
-      .then((kws) => {
-        if (kws) setKeywords(kws);
-      })
-      .catch(() => setNotFound(true))
-      .finally(() => setLoading(false));
+      .catch(() => setNotFound(true));
   }, [slug]);
 
-  if (loading) {
+  useEffect(() => {
+    if (!site) return;
+    setLoading(true);
+    getKeywords(site.site_url, device)
+      .then((kws) => {
+        setKeywords(kws);
+        if (kws.length && !selectedKeyword) {
+          setSelectedKeyword(kws[0].keyword);
+        }
+      })
+      .catch(() => setKeywords([]))
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [site, device]);
+
+  if (loading && !site) {
     return (
-      <div className="p-6 lg:p-10">
+      <div className="p-4 md:p-6 lg:p-10">
         <div className="animate-pulse space-y-6">
           <div className="h-8 bg-gray-200 rounded w-64" />
           <div className="grid grid-cols-3 gap-5">
@@ -78,7 +105,7 @@ export default function SitePage({ params }: Props) {
 
   if (notFound || !site) {
     return (
-      <div className="p-6 lg:p-10">
+      <div className="p-4 md:p-6 lg:p-10">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto mt-20">
           <p className="text-red-600 text-lg font-semibold font-[Outfit]">
             Sitio no encontrado
@@ -132,54 +159,29 @@ export default function SitePage({ params }: Props) {
             {site.avg_position?.toFixed(1) ?? "\u2014"}
           </p>
         </div>
-        <ScanButton site={site.site_url} />
+        <div className="flex flex-wrap items-center gap-2 md:gap-3">
+          <DeviceToggle value={device} onChange={setDevice} />
+          <ScanButton site={site.site_url} />
+        </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-3 gap-3 md:gap-5">
-        <div className="bg-white rounded-xl p-3 md:p-5 shadow-sm border border-gray-100">
-          <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-lavender/60 flex items-center justify-center">
-              <Key className="w-4 h-4 md:w-5 md:h-5 text-violet" />
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-[10px] md:text-sm font-medium text-neutral">Keywords</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 font-[Outfit]">
-                {site.keyword_count}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-3 md:p-5 shadow-sm border border-gray-100">
-          <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-lavender/60 flex items-center justify-center">
-              <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-violet" />
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-[10px] md:text-sm font-medium text-neutral">Pos. media</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 font-[Outfit]">
-                {site.avg_position?.toFixed(1) ?? "\u2014"}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-3 md:p-5 shadow-sm border border-gray-100">
-          <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3">
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-lavender/60 flex items-center justify-center">
-              <Trophy className="w-4 h-4 md:w-5 md:h-5 text-violet" />
-            </div>
-            <div className="text-center md:text-left">
-              <p className="text-[10px] md:text-sm font-medium text-neutral">Mejor pos.</p>
-              <p className="text-lg md:text-2xl font-bold text-gray-900 font-[Outfit]">
-                {bestPosition !== null ? bestPosition.toFixed(1) : "\u2014"}
-              </p>
-            </div>
-          </div>
-        </div>
+        <KpiCard icon={Key} label="Keywords" value={site.keyword_count} />
+        <KpiCard
+          icon={TrendingUp}
+          label="Pos. media"
+          value={site.avg_position?.toFixed(1) ?? "\u2014"}
+        />
+        <KpiCard
+          icon={Trophy}
+          label="Mejor pos."
+          value={bestPosition !== null ? bestPosition.toFixed(1) : "\u2014"}
+        />
       </div>
 
-      {/* Keywords — Cards on mobile, Table on desktop */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Keywords */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-[fadeIn_0.3s_ease]">
         <div className="px-4 md:px-6 py-3 md:py-4 border-b border-gray-100">
           <h2 className="text-base md:text-lg font-bold text-gray-900 font-[Outfit]">
             Palabras clave
@@ -206,10 +208,19 @@ export default function SitePage({ params }: Props) {
                       ? "text-amber-600"
                       : "text-red-500";
 
+            const selected = kw.keyword === selectedKeyword;
             return (
-              <div key={kw.keyword} className="px-4 py-3">
-                <p className="text-sm font-medium text-gray-900 mb-1.5">{kw.keyword}</p>
-                <div className="flex items-center gap-4 text-xs">
+              <button
+                key={kw.keyword}
+                onClick={() => setSelectedKeyword(kw.keyword)}
+                className={`w-full px-4 py-3 text-left transition-colors ${
+                  selected ? "bg-lavender/40 border-l-4 border-violet" : ""
+                }`}
+              >
+                <p className="text-sm font-medium text-gray-900 mb-1.5">
+                  {kw.keyword}
+                </p>
+                <div className="flex items-center gap-3 text-xs flex-wrap">
                   <span className={`font-bold font-[Outfit] text-base ${posColor}`}>
                     {kw.position !== null ? kw.position.toFixed(1) : "\u2014"}
                   </span>
@@ -224,13 +235,20 @@ export default function SitePage({ params }: Props) {
                   >
                     {changePositive && <ArrowUpRight className="w-3 h-3" />}
                     {changeNegative && <ArrowDownRight className="w-3 h-3" />}
-                    {!changePositive && !changeNegative && <Minus className="w-3 h-3" />}
-                    {kw.change !== null ? Math.abs(kw.change).toFixed(1) : "\u2014"}
+                    {!changePositive && !changeNegative && (
+                      <Minus className="w-3 h-3" />
+                    )}
+                    {kw.change !== null
+                      ? Math.abs(kw.change).toFixed(1)
+                      : "\u2014"}
                   </span>
                   <span className="text-neutral">{kw.clicks ?? 0} clics</span>
+                  <span className="text-neutral">
+                    vol. {kw.estimated_volume}
+                  </span>
                   <PriorityBadge priority={kw.priority} />
                 </div>
-              </div>
+              </button>
             );
           })}
         </div>
@@ -250,6 +268,9 @@ export default function SitePage({ params }: Props) {
                   Cambio
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider">
+                  Volumen est.
+                </th>
+                <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider">
                   Clics
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider">
@@ -264,11 +285,9 @@ export default function SitePage({ params }: Props) {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {keywords.map((kw, index) => {
-                const changePositive =
-                  kw.change !== null && kw.change > 0;
-                const changeNegative =
-                  kw.change !== null && kw.change < 0;
+              {keywords.map((kw) => {
+                const changePositive = kw.change !== null && kw.change > 0;
+                const changeNegative = kw.change !== null && kw.change < 0;
                 const posColor =
                   kw.position === null
                     ? ""
@@ -279,12 +298,13 @@ export default function SitePage({ params }: Props) {
                         : kw.position <= 20
                           ? "text-amber-600"
                           : "text-red-500";
-
+                const selected = kw.keyword === selectedKeyword;
                 return (
                   <tr
                     key={kw.keyword}
-                    className={`hover:bg-gray-50 transition-colors ${
-                      index % 2 === 0 ? "bg-white" : "bg-gray-50/30"
+                    onClick={() => setSelectedKeyword(kw.keyword)}
+                    className={`transition-colors cursor-pointer ${
+                      selected ? "bg-lavender/60" : "hover:bg-lavender/40"
                     }`}
                   >
                     <td className="px-6 py-3.5">
@@ -323,6 +343,9 @@ export default function SitePage({ params }: Props) {
                           : "\u2014"}
                       </span>
                     </td>
+                    <td className="text-right px-4 py-3.5 text-gray-700 font-medium">
+                      {kw.estimated_volume.toLocaleString()}
+                    </td>
                     <td className="text-right px-4 py-3.5 text-gray-700">
                       {kw.clicks ?? "\u2014"}
                     </td>
@@ -341,6 +364,7 @@ export default function SitePage({ params }: Props) {
             </tbody>
           </table>
         </div>
+
         {keywords.length === 0 && (
           <div className="text-center py-12 text-neutral">
             No hay palabras clave trackeadas para este sitio.
@@ -356,6 +380,40 @@ export default function SitePage({ params }: Props) {
           position: k.position,
         }))}
       />
+
+      {/* Competitors */}
+      <CompetitorsPanel site={site.site_url} keyword={selectedKeyword} />
+
+      {/* Local grid */}
+      <LocalGridPanel site={site.site_url} />
+    </div>
+  );
+}
+
+function KpiCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: React.ElementType;
+  label: string;
+  value: React.ReactNode;
+}) {
+  return (
+    <div className="bg-white rounded-xl p-3 md:p-5 shadow-sm border border-gray-100 border-l-[3px] border-l-violet animate-[fadeIn_0.3s_ease]">
+      <div className="flex flex-col md:flex-row items-center gap-1 md:gap-3">
+        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-lavender/60 flex items-center justify-center">
+          <Icon className="w-4 h-4 md:w-5 md:h-5 text-violet" />
+        </div>
+        <div className="text-center md:text-left">
+          <p className="text-[10px] md:text-sm font-medium text-neutral">
+            {label}
+          </p>
+          <p className="text-lg md:text-2xl font-bold text-gray-900 font-[Outfit]">
+            {value}
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

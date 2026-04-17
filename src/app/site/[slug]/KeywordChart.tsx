@@ -67,7 +67,7 @@ export default function KeywordChart({ siteUrl, keywords }: Props) {
           Sin datos históricos disponibles
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="99%" width="100%" height={300}>
           <LineChart
             data={data}
             margin={{ top: 10, right: 10, left: 0, bottom: 10 }}
