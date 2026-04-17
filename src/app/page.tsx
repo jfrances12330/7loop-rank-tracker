@@ -1,16 +1,36 @@
+"use client";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import StatCard from "@/components/StatCard";
 import SiteCard from "@/components/SiteCard";
 import ScanButton from "@/components/ScanButton";
-import { getSites, getStats } from "@/lib/api";
+import { getSites, getStats, type Site, type Stats } from "@/lib/api";
 
-export const dynamic = "force-dynamic";
+export default function Home() {
+  const [sites, setSites] = useState<Site[]>([]);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-export default async function Home() {
-  let sites, stats;
-  try {
-    [sites, stats] = await Promise.all([getSites(), getStats()]);
-  } catch {
+  useEffect(() => {
+    Promise.all([getSites(), getStats()])
+      .then(([s, st]) => { setSites(s); setStats(st); })
+      .catch(() => setError(true))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-20 text-center">
+          <div className="animate-pulse text-lavender/40 text-lg">Cargando datos...</div>
+        </main>
+      </>
+    );
+  }
+
+  if (error || !stats) {
     return (
       <>
         <Header />

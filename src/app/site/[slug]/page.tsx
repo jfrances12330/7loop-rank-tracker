@@ -1,22 +1,48 @@
+"use client";
+import { useState, useEffect, use } from "react";
 import Header from "@/components/Header";
 import ScanButton from "@/components/ScanButton";
 import SparkLine from "@/components/SparkLine";
-import { getSites, getKeywords } from "@/lib/api";
+import { getSites, getKeywords, type Site, type Keyword } from "@/lib/api";
 import Link from "next/link";
 import KeywordChart from "./KeywordChart";
-
-export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export default async function SitePage({ params }: Props) {
-  const { slug } = await params;
-  const sites = await getSites();
-  const site = sites.find((s) => s.slug === slug);
+export default function SitePage({ params }: Props) {
+  const { slug } = use(params);
+  const [site, setSite] = useState<Site | null>(null);
+  const [keywords, setKeywords] = useState<Keyword[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!site) {
+  useEffect(() => {
+    getSites()
+      .then((sites) => {
+        const found = sites.find((s) => s.slug === slug);
+        if (!found) { setNotFound(true); setLoading(false); return; }
+        setSite(found);
+        return getKeywords(found.site_url);
+      })
+      .then((kws) => { if (kws) setKeywords(kws); })
+      .catch(() => setNotFound(true))
+      .finally(() => setLoading(false));
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <>
+        <Header />
+        <main className="flex-1 max-w-7xl mx-auto px-4 py-20 text-center">
+          <div className="animate-pulse text-lavender/40 text-lg">Cargando...</div>
+        </main>
+      </>
+    );
+  }
+
+  if (notFound || !site) {
     return (
       <>
         <Header />
@@ -27,8 +53,6 @@ export default async function SitePage({ params }: Props) {
       </>
     );
   }
-
-  const keywords = await getKeywords(site.site_url);
 
   return (
     <>
