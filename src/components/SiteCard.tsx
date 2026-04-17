@@ -1,38 +1,83 @@
 import Link from "next/link";
 import type { Site } from "@/lib/api";
+import { ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
 
 export default function SiteCard({ site }: { site: Site }) {
-  const trendColor = site.trend === null ? "text-gray" : site.trend > 0 ? "text-emerald-400" : site.trend < 0 ? "text-red-400" : "text-gray";
-  const trendIcon = site.trend === null ? "—" : site.trend > 0 ? `▲ ${site.trend.toFixed(1)}` : site.trend < 0 ? `▼ ${Math.abs(site.trend).toFixed(1)}` : "= 0";
+  const trend = site.trend;
+  const trendPositive = trend !== null && Number(trend) > 0;
+  const trendNegative = trend !== null && Number(trend) < 0;
+
+  const displayName = site.site_url
+    .replace(/^https?:\/\//, "")
+    .replace(/\/$/, "");
 
   return (
     <Link href={`/site/${site.slug}`} className="block group">
-      <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-violet/30 transition-all duration-300 hover:shadow-lg hover:shadow-violet/10">
+      <div className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md border border-gray-100 transition-all duration-200 h-full flex flex-col">
+        {/* Header */}
         <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-lg font-bold text-white font-[Outfit] group-hover:text-violet transition-colors">
-              {site.site_url}
-            </h3>
-            <p className="text-sm text-lavender/50">{site.keyword_count} keywords</p>
-          </div>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo/20 to-violet/20 flex items-center justify-center text-violet">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-violet to-indigo flex items-center justify-center text-white text-sm font-bold font-[Outfit]">
+              {displayName.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <h3 className="text-base font-semibold text-gray-900 font-[Outfit] group-hover:text-violet transition-colors truncate max-w-[180px]">
+                {displayName}
+              </h3>
+              <p className="text-xs text-neutral">
+                {site.keyword_count} keywords
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-4 flex-1">
           <div>
-            <p className="text-xs text-lavender/40 uppercase tracking-wider">Pos. Media</p>
-            <p className="text-2xl font-bold text-white font-[Outfit]">
-              {site.avg_position !== null ? site.avg_position.toFixed(1) : "—"}
+            <p className="text-xs text-neutral font-medium uppercase tracking-wider mb-1">
+              Avg Position
+            </p>
+            <p className="text-2xl font-bold text-gray-900 font-[Outfit]">
+              {site.avg_position !== null
+                ? site.avg_position.toFixed(1)
+                : "\u2014"}
             </p>
           </div>
           <div>
-            <p className="text-xs text-lavender/40 uppercase tracking-wider">Tendencia</p>
-            <p className={`text-2xl font-bold font-[Outfit] ${trendColor}`}>
-              {trendIcon}
+            <p className="text-xs text-neutral font-medium uppercase tracking-wider mb-1">
+              Trend
             </p>
+            <div className="flex items-center gap-1.5">
+              {trendPositive && (
+                <TrendingUp className="w-4 h-4 text-emerald-500" />
+              )}
+              {trendNegative && (
+                <TrendingDown className="w-4 h-4 text-red-500" />
+              )}
+              {!trendPositive && !trendNegative && (
+                <Minus className="w-4 h-4 text-neutral" />
+              )}
+              <span
+                className={`text-lg font-bold font-[Outfit] ${
+                  trendPositive
+                    ? "text-emerald-600"
+                    : trendNegative
+                      ? "text-red-500"
+                      : "text-neutral"
+                }`}
+              >
+                {trend !== null ? `${Math.abs(Number(trend)).toFixed(1)}` : "\u2014"}
+              </span>
+            </div>
           </div>
+        </div>
+
+        {/* Footer link */}
+        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-end">
+          <span className="text-sm font-medium text-violet group-hover:text-indigo transition-colors flex items-center gap-1">
+            View Details
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </span>
         </div>
       </div>
     </Link>

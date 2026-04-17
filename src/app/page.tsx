@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import Header from "@/components/Header";
 import StatCard from "@/components/StatCard";
 import SiteCard from "@/components/SiteCard";
 import ScanButton from "@/components/ScanButton";
 import { getSites, getStats, type Site, type Stats } from "@/lib/api";
+import { Key, TrendingUp, MousePointer, Eye } from "lucide-react";
 
 export default function Home() {
   const [sites, setSites] = useState<Site[]>([]);
@@ -14,76 +14,112 @@ export default function Home() {
 
   useEffect(() => {
     Promise.all([getSites(), getStats()])
-      .then(([s, st]) => { setSites(s); setStats(st); })
+      .then(([s, st]) => {
+        setSites(s);
+        setStats(st);
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
     return (
-      <>
-        <Header />
-        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-20 text-center">
-          <div className="animate-pulse text-lavender/40 text-lg">Cargando datos...</div>
-        </main>
-      </>
+      <div className="p-6 lg:p-10">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-48" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-28 bg-gray-100 rounded-xl" />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-52 bg-gray-100 rounded-xl" />
+            ))}
+          </div>
+        </div>
+      </div>
     );
   }
 
   if (error || !stats) {
     return (
-      <>
-        <Header />
-        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-10">
-          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-8 text-center">
-            <p className="text-red-400 text-lg font-semibold">No se pudo conectar con la API</p>
-            <p className="text-lavender/50 text-sm mt-2">Verifica que el backend esta corriendo en el VPS.</p>
-          </div>
-        </main>
-      </>
+      <div className="p-6 lg:p-10">
+        <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto mt-20">
+          <p className="text-red-600 text-lg font-semibold font-[Outfit]">
+            Could not connect to the API
+          </p>
+          <p className="text-neutral text-sm mt-2">
+            Make sure the backend is running on the VPS.
+          </p>
+        </div>
+      </div>
     );
   }
 
+  // Compute totals from sites for clicks/impressions (stats only has basic info)
+  const totalKeywords = stats.total_keywords;
+  const avgPosition = stats.avg_position;
+  const improved = stats.improved;
+  const declined = stats.declined;
+
   return (
-    <>
-      <Header />
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        {/* Stats row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <StatCard icon="🌐" label="Sitios web" value={stats.total_sites} color="from-indigo to-violet" />
-          <StatCard icon="🔑" label="Keywords" value={stats.total_keywords} color="from-violet to-pink-500" />
-          <StatCard
-            icon="📊"
-            label="Posicion media"
-            value={stats.avg_position !== null ? stats.avg_position.toFixed(1) : "—"}
-            color="from-emerald-400 to-cyan-400"
-          />
-          <StatCard
-            icon="📅"
-            label="Ultimo scan"
-            value={stats.last_scan || "—"}
-            color="from-amber-400 to-orange-500"
-            sub={`${stats.improvements} mejoras / ${stats.drops} caidas`}
-          />
+    <div className="p-6 lg:p-10 space-y-8">
+      {/* Page header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 font-[Outfit]">
+            SEO Dashboard
+          </h1>
+          <p className="text-neutral mt-1">
+            Monitor your search rankings across all sites
+          </p>
         </div>
+        <ScanButton />
+      </div>
 
-        {/* Actions */}
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white font-[Outfit]">Sitios web</h2>
-          <ScanButton />
-        </div>
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <StatCard
+          icon={Key}
+          label="Total Keywords"
+          value={totalKeywords}
+        />
+        <StatCard
+          icon={TrendingUp}
+          label="Average Position"
+          value={avgPosition !== null ? avgPosition.toFixed(1) : "\u2014"}
+        />
+        <StatCard
+          icon={MousePointer}
+          label="Improved"
+          value={improved}
+          subtitle="Keywords improved"
+        />
+        <StatCard
+          icon={Eye}
+          label="Declined"
+          value={declined}
+          subtitle="Keywords declined"
+        />
+      </div>
 
-        {/* Sites grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Sites Overview */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-900 font-[Outfit] mb-5">
+          Sites Overview
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {sites.map((site) => (
             <SiteCard key={site.site_url} site={site} />
           ))}
         </div>
-      </main>
-
-      <footer className="border-t border-white/5 py-6 text-center text-sm text-lavender/30">
-        7Loop SEO Tracker — {new Date().getFullYear()}
-      </footer>
-    </>
+        {sites.length === 0 && (
+          <div className="text-center py-12 text-neutral">
+            No sites configured yet.
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
