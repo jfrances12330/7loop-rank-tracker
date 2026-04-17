@@ -33,7 +33,7 @@ export default function RootLayout({
       </head>
       <body className="h-full flex">
         <Sidebar />
-        <main className="flex-1 ml-0 md:ml-[260px] min-h-screen pb-16 md:pb-0">
+        <main className="flex-1 pt-[env(safe-area-inset-top)] ml-0 md:ml-[260px] min-h-screen pb-16 md:pb-0">
           {children}
         </main>
         <BottomTabs />
