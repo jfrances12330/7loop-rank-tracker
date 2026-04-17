@@ -165,3 +165,17 @@ html, body {
   content: '';
   animation: dots 1.5s steps(1) infinite;
 }
+
+/* FIX DEFINITIVO: contenido NUNCA se mete detrás del bottom tab bar */
+@media (max-width: 768px) {
+  main, [role="main"], .main-content {
+    padding-bottom: 6rem !important;
+    min-height: calc(100vh - 6rem);
+  }
+  
+  /* Asegurar que el último elemento visible tiene margen */
+  main > *:last-child,
+  [role="main"] > *:last-child {
+    margin-bottom: 2rem !important;
+  }
+}
