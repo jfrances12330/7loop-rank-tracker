@@ -20,7 +20,17 @@ export async function POST(req: NextRequest) {
   const endpoint = req.nextUrl.searchParams.get('endpoint') || 'scan';
   const url = `${BACKEND}/api/${endpoint}`;
   try {
-    const res = await fetch(url, { method: 'POST', cache: 'no-store' });
+    let body: string | undefined;
+    const contentType = req.headers.get('content-type');
+    if (contentType?.includes('application/json')) {
+      try { body = JSON.stringify(await req.json()); } catch { /* empty body is fine */ }
+    }
+    const res = await fetch(url, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: body ? { 'Content-Type': 'application/json' } : {},
+      ...(body ? { body } : {}),
+    });
     const data = await res.json();
     return NextResponse.json(data);
   } catch (e) {

@@ -125,7 +125,28 @@ export async function getLocalKeywords(site?: string): Promise<LocalKeyword[]> {
   return get('local-keywords', params);
 }
 
-export async function triggerScan() {
+export interface ScanResults {
+  gsc: { scanned: number; changes: number; note?: string };
+  maps: { scanned: number; changes: number; note?: string };
+  organic: { scanned: number; note?: string };
+}
+
+export interface ScanStatus {
+  status: 'idle' | 'scanning' | 'completed' | 'error';
+  progress?: string;
+  phase?: string;
+  started_at?: string;
+  completed_at?: string;
+  duration_seconds?: number;
+  results?: ScanResults;
+  message?: string;
+}
+
+export async function triggerScan(): Promise<ScanStatus> {
   const res = await fetch(`${API}?endpoint=scan`, { method: 'POST', cache: 'no-store' });
   return res.json();
+}
+
+export async function getScanStatus(): Promise<ScanStatus> {
+  return get('scan-status');
 }
