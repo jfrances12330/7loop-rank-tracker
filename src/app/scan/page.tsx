@@ -165,7 +165,7 @@ export default function ScanPage() {
   };
 
   return (
-    <div className="p-4 md:p-8 flex flex-col items-center justify-center min-h-[60vh]">
+    <div className="p-4 md:p-8 pb-28 md:pb-8 flex flex-col items-center justify-center min-h-[60vh]">
       <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-2 font-heading">
         Escanear posiciones
       </h1>

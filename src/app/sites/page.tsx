@@ -8,7 +8,7 @@ export default function SitesPage() {
   useEffect(() => { getSites().then(setSites).catch(() => {}); }, []);
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="p-4 md:p-8 pb-28 md:pb-8">
       <h1 className="text-xl md:text-3xl font-bold text-gray-900 mb-2">Sitios web</h1>
       <p className="text-sm text-gray-500 mb-6">Selecciona un sitio para ver sus palabras clave</p>
       <div className="space-y-3">
