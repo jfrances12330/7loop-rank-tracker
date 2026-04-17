@@ -9,23 +9,16 @@ import {
   Settings,
   ChevronDown,
   ChevronRight,
-  Menu,
-  X,
 } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [sites, setSites] = useState<Site[]>([]);
   const [sitesOpen, setSitesOpen] = useState(true);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     getSites().then(setSites).catch(() => {});
   }, []);
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
 
   const navItems = [
     { href: "/", label: "Panel principal", icon: LayoutDashboard },
@@ -139,41 +132,8 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-midnight text-white p-2 rounded-lg shadow-lg"
-        aria-label="Open menu"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-
-      {/* Mobile overlay */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* Sidebar - mobile */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-sidebar-from to-sidebar-to transform transition-transform duration-300 lg:hidden ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <button
-          onClick={() => setMobileOpen(false)}
-          className="absolute top-4 right-4 text-white/50 hover:text-white"
-          aria-label="Close menu"
-        >
-          <X className="w-5 h-5" />
-        </button>
-        {sidebarContent}
-      </aside>
-
-      {/* Sidebar - desktop */}
-      <aside className="hidden lg:flex lg:flex-col lg:fixed lg:inset-y-0 lg:left-0 lg:w-[260px] bg-gradient-to-b from-sidebar-from to-sidebar-to z-30">
+      {/* Sidebar - desktop only */}
+      <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-[260px] bg-gradient-to-b from-sidebar-from to-sidebar-to z-30">
         {sidebarContent}
       </aside>
     </>

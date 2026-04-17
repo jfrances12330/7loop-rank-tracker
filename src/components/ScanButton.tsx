@@ -29,7 +29,7 @@ export default function ScanButton({ site: _site }: { site?: string }) {
       <button
         onClick={handleScan}
         disabled={loading}
-        className="inline-flex items-center gap-2 px-5 py-2.5 bg-violet hover:bg-indigo text-white rounded-lg font-medium text-sm transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-wait"
+        className="inline-flex items-center gap-1.5 md:gap-2 px-3 py-2 md:px-5 md:py-2.5 bg-violet hover:bg-indigo text-white rounded-lg font-medium text-xs md:text-sm transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-wait"
       >
         <RefreshCw
           className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}

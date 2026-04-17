@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
+import BottomTabs from "@/components/BottomTabs";
 
 export const metadata: Metadata = {
   title: "7Loop SEO Tracker",
@@ -17,6 +18,7 @@ export const viewport: Viewport = {
   themeColor: "#3B0764",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -31,9 +33,10 @@ export default function RootLayout({
       </head>
       <body className="h-full flex">
         <Sidebar />
-        <main className="flex-1 ml-0 lg:ml-[260px] min-h-screen">
+        <main className="flex-1 ml-0 md:ml-[260px] min-h-screen pb-16 md:pb-0">
           {children}
         </main>
+        <BottomTabs />
       </body>
     </html>
   );
