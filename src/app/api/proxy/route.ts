@@ -9,9 +9,20 @@ export async function GET(req: NextRequest) {
   const url = `${BACKEND}/api/${endpoint}${params.toString() ? '?' + params.toString() : ''}`;
   try {
     const res = await fetch(url, { cache: 'no-store' });
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const buf = await res.arrayBuffer();
+      return new NextResponse(buf, {
+        status: res.status,
+        headers: {
+          'Content-Type': contentType || 'application/octet-stream',
+          'Content-Disposition': res.headers.get('content-disposition') || 'inline',
+        },
+      });
+    }
     const data = await res.json();
     return NextResponse.json(data);
-  } catch (e) {
+  } catch {
     return NextResponse.json({ error: 'Backend no disponible' }, { status: 502 });
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import BottomTabs from "@/components/BottomTabs";
+import MainShell from "@/components/MainShell";
 
 export const metadata: Metadata = {
   title: "7Loop SEO Tracker",
@@ -33,9 +34,7 @@ export default function RootLayout({
       </head>
       <body className="h-full flex">
         <Sidebar />
-        <main className="flex-1 md:ml-64 min-h-screen pb-28 md:pb-0">
-          {children}
-        </main>
+        <MainShell>{children}</MainShell>
         <BottomTabs />
       </body>
     </html>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getSites, type Site } from "@/lib/api";
+import AlertsBell from "@/components/AlertsBell";
 import {
   LayoutDashboard,
   Globe,
@@ -112,7 +113,7 @@ export default function Sidebar() {
 
         {/* Settings */}
         <Link
-          href="#"
+          href="/settings"
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
         >
           <Settings className="w-[18px] h-[18px]" />
@@ -130,12 +131,20 @@ export default function Sidebar() {
     </div>
   );
 
+  // Hide sidebar completely on /client/[token] public pages
+  if (pathname.startsWith("/client/")) return null;
+
   return (
     <>
       {/* Sidebar - desktop only */}
       <aside className="hidden md:flex md:flex-col md:fixed md:inset-y-0 md:left-0 md:w-[260px] bg-gradient-to-b from-sidebar-from to-sidebar-to z-30">
         {sidebarContent}
       </aside>
+
+      {/* Floating alerts bell */}
+      <div className="fixed top-3 right-3 md:top-4 md:right-5 z-40 bg-white/90 backdrop-blur-sm rounded-full shadow-md border border-gray-100">
+        <AlertsBell />
+      </div>
     </>
   );
 }

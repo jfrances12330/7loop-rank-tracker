@@ -4,6 +4,11 @@ import ScanButton from "@/components/ScanButton";
 import DeviceToggle from "@/components/DeviceToggle";
 import CompetitorsPanel from "@/components/CompetitorsPanel";
 import LocalGridPanel from "@/components/LocalGridPanel";
+import RoiPanel from "@/components/RoiPanel";
+import ReportButton from "@/components/ReportButton";
+import CompetitorsComparison from "@/components/CompetitorsComparison";
+import ReviewsPanel from "@/components/ReviewsPanel";
+import TasksPanel from "@/components/TasksPanel";
 import {
   getSites,
   getKeywords,
@@ -290,7 +295,7 @@ export default function SitePage({ params }: Props) {
   };
 
   return (
-    <div className="p-4 md:p-6 lg:p-10 space-y-5 md:space-y-8">
+    <div className="p-4 md:p-6 lg:p-10 space-y-5 md:space-y-8 pb-28 md:pb-10">
       {/* Toast */}
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
 
@@ -381,6 +386,7 @@ export default function SitePage({ params }: Props) {
             <span className="hidden sm:inline">Añadir keyword</span>
           </button>
           <DeviceToggle value={device} onChange={setDevice} />
+          <ReportButton site={site.site_url} />
           <ScanButton site={site.site_url} />
         </div>
       </div>
@@ -735,11 +741,26 @@ export default function SitePage({ params }: Props) {
         }))}
       />
 
-      {/* Competitors */}
+      {/* ROI */}
+      <RoiPanel site={site.site_url} />
+
+      {/* Competitors comparison */}
+      <CompetitorsComparison site={site.site_url} />
+
+      {/* Competitors detail (top 10 per kw) */}
       <CompetitorsPanel site={site.site_url} keyword={selectedKeyword} />
 
       {/* Local grid */}
       <LocalGridPanel site={site.site_url} />
+
+      {/* Reviews */}
+      <ReviewsPanel site={site.site_url} />
+
+      {/* Tasks */}
+      <TasksPanel site={site.site_url} />
+
+      {/* Bottom spacing for mobile tab bar */}
+      <div className="pb-20 md:pb-4" />
     </div>
   );
 }
