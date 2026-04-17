@@ -28,7 +28,7 @@ export default function Sidebar() {
   }, [pathname]);
 
   const navItems = [
-    { href: "/", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/", label: "Panel principal", icon: LayoutDashboard },
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -81,7 +81,7 @@ export default function Sidebar() {
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
         >
           <Globe className="w-[18px] h-[18px]" />
-          <span className="flex-1 text-left">Sites</span>
+          <span className="flex-1 text-left">Sitios web</span>
           {sitesOpen ? (
             <ChevronDown className="w-4 h-4" />
           ) : (
@@ -112,7 +112,7 @@ export default function Sidebar() {
               );
             })}
             {sites.length === 0 && (
-              <p className="px-3 py-2 text-xs text-white/30">Loading...</p>
+              <p className="px-3 py-2 text-xs text-white/30">Cargando...</p>
             )}
           </div>
         )}
@@ -123,14 +123,14 @@ export default function Sidebar() {
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/70 hover:text-white hover:bg-white/10 transition-all duration-200"
         >
           <Settings className="w-[18px] h-[18px]" />
-          Settings
+          Ajustes
         </Link>
       </nav>
 
       {/* Footer */}
       <div className="px-6 py-4 border-t border-white/10">
         <p className="text-white/30 text-xs">
-          Powered by <span className="text-white/50 font-medium">7Loop</span>
+          Desarrollado por <span className="text-white/50 font-medium">7Loop</span>
         </p>
         <p className="text-white/20 text-[10px] mt-0.5">v1.0.0</p>
       </div>

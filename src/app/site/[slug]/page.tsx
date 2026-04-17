@@ -29,7 +29,7 @@ function PriorityBadge({ priority }: { priority: string }) {
     <span
       className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${style}`}
     >
-      {priority}
+      {priority === "high" ? "alta" : priority === "medium" ? "media" : priority === "low" ? "baja" : priority}
     </span>
   );
 }
@@ -81,14 +81,14 @@ export default function SitePage({ params }: Props) {
       <div className="p-6 lg:p-10">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto mt-20">
           <p className="text-red-600 text-lg font-semibold font-[Outfit]">
-            Site not found
+            Sitio no encontrado
           </p>
           <Link
             href="/"
             className="inline-flex items-center gap-1 text-violet font-medium mt-4 hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            Volver al panel
           </Link>
         </div>
       </div>
@@ -122,13 +122,13 @@ export default function SitePage({ params }: Props) {
             className="inline-flex items-center gap-1 text-sm text-neutral hover:text-violet transition-colors mb-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            Volver al panel
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 font-[Outfit]">
             {displayName}
           </h1>
           <p className="text-neutral mt-1">
-            {site.keyword_count} keywords tracked &middot; Avg position:{" "}
+            {site.keyword_count} keywords trackeadas &middot; Posición media:{" "}
             {site.avg_position?.toFixed(1) ?? "\u2014"}
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function SitePage({ params }: Props) {
               <Key className="w-5 h-5 text-violet" />
             </div>
             <div>
-              <p className="text-sm font-medium text-neutral">Keywords</p>
+              <p className="text-sm font-medium text-neutral">Palabras clave</p>
               <p className="text-2xl font-bold text-gray-900 font-[Outfit]">
                 {site.keyword_count}
               </p>
@@ -156,7 +156,7 @@ export default function SitePage({ params }: Props) {
               <TrendingUp className="w-5 h-5 text-violet" />
             </div>
             <div>
-              <p className="text-sm font-medium text-neutral">Avg Position</p>
+              <p className="text-sm font-medium text-neutral">Posición media</p>
               <p className="text-2xl font-bold text-gray-900 font-[Outfit]">
                 {site.avg_position?.toFixed(1) ?? "\u2014"}
               </p>
@@ -169,7 +169,7 @@ export default function SitePage({ params }: Props) {
               <Trophy className="w-5 h-5 text-violet" />
             </div>
             <div>
-              <p className="text-sm font-medium text-neutral">Best Position</p>
+              <p className="text-sm font-medium text-neutral">Mejor posición</p>
               <p className="text-2xl font-bold text-gray-900 font-[Outfit]">
                 {bestPosition !== null ? bestPosition.toFixed(1) : "\u2014"}
               </p>
@@ -182,11 +182,11 @@ export default function SitePage({ params }: Props) {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100">
           <h2 className="text-lg font-bold text-gray-900 font-[Outfit]">
-            Keywords
+            Palabras clave
           </h2>
           <p className="text-sm text-neutral mt-0.5">
-            {totalClicks.toLocaleString()} clicks &middot;{" "}
-            {totalImpressions.toLocaleString()} impressions
+            {totalClicks.toLocaleString()} clics &middot;{" "}
+            {totalImpressions.toLocaleString()} impresiones
           </p>
         </div>
         <div className="overflow-x-auto">
@@ -194,25 +194,25 @@ export default function SitePage({ params }: Props) {
             <thead>
               <tr className="bg-gray-50/80">
                 <th className="text-left px-6 py-3 text-xs font-semibold text-neutral uppercase tracking-wider">
-                  Keyword
+                  Palabra clave
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider">
-                  Position
+                  Posición
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider">
-                  Change
+                  Cambio
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider hidden sm:table-cell">
-                  Clicks
+                  Clics
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider hidden sm:table-cell">
-                  Impressions
+                  Impresiones
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider hidden md:table-cell">
                   CTR
                 </th>
                 <th className="text-center px-4 py-3 text-xs font-semibold text-neutral uppercase tracking-wider hidden md:table-cell">
-                  Priority
+                  Prioridad
                 </th>
               </tr>
             </thead>
@@ -296,7 +296,7 @@ export default function SitePage({ params }: Props) {
         </div>
         {keywords.length === 0 && (
           <div className="text-center py-12 text-neutral">
-            No keywords tracked for this site.
+            No hay palabras clave trackeadas para este sitio.
           </div>
         )}
       </div>

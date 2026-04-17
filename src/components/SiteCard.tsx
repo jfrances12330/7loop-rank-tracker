@@ -25,7 +25,7 @@ export default function SiteCard({ site }: { site: Site }) {
                 {displayName}
               </h3>
               <p className="text-xs text-neutral">
-                {site.keyword_count} keywords
+                {site.keyword_count} palabras clave
               </p>
             </div>
           </div>
@@ -35,7 +35,7 @@ export default function SiteCard({ site }: { site: Site }) {
         <div className="grid grid-cols-2 gap-4 flex-1">
           <div>
             <p className="text-xs text-neutral font-medium uppercase tracking-wider mb-1">
-              Avg Position
+              Posición media
             </p>
             <p className="text-2xl font-bold text-gray-900 font-[Outfit]">
               {site.avg_position !== null
@@ -45,7 +45,7 @@ export default function SiteCard({ site }: { site: Site }) {
           </div>
           <div>
             <p className="text-xs text-neutral font-medium uppercase tracking-wider mb-1">
-              Trend
+              Tendencia
             </p>
             <div className="flex items-center gap-1.5">
               {trendPositive && (
@@ -75,7 +75,7 @@ export default function SiteCard({ site }: { site: Site }) {
         {/* Footer link */}
         <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-end">
           <span className="text-sm font-medium text-violet group-hover:text-indigo transition-colors flex items-center gap-1">
-            View Details
+            Ver detalle
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </span>
         </div>

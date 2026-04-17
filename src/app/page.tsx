@@ -47,10 +47,10 @@ export default function Home() {
       <div className="p-6 lg:p-10">
         <div className="bg-red-50 border border-red-200 rounded-xl p-8 text-center max-w-lg mx-auto mt-20">
           <p className="text-red-600 text-lg font-semibold font-[Outfit]">
-            Could not connect to the API
+            No se pudo conectar con la API
           </p>
           <p className="text-neutral text-sm mt-2">
-            Make sure the backend is running on the VPS.
+            Asegúrate de que el backend está corriendo en el VPS.
           </p>
         </div>
       </div>
@@ -69,10 +69,10 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 font-[Outfit]">
-            SEO Dashboard
+            Panel de seguimiento SEO
           </h1>
           <p className="text-neutral mt-1">
-            Monitor your search rankings across all sites
+            Monitoriza las posiciones de búsqueda de todos tus sitios
           </p>
         </div>
         <ScanButton />
@@ -82,32 +82,32 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           icon={Key}
-          label="Total Keywords"
+          label="Palabras clave"
           value={totalKeywords}
         />
         <StatCard
           icon={TrendingUp}
-          label="Average Position"
+          label="Posición media"
           value={avgPosition !== null ? avgPosition.toFixed(1) : "\u2014"}
         />
         <StatCard
           icon={MousePointer}
-          label="Improved"
+          label="Mejoras"
           value={improved}
-          subtitle="Keywords improved"
+          subtitle="Keywords que han mejorado"
         />
         <StatCard
           icon={Eye}
-          label="Declined"
+          label="Caídas"
           value={declined}
-          subtitle="Keywords declined"
+          subtitle="Keywords que han caído"
         />
       </div>
 
       {/* Sites Overview */}
       <div>
         <h2 className="text-xl font-bold text-gray-900 font-[Outfit] mb-5">
-          Sites Overview
+          Resumen de sitios
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {sites.map((site) => (
@@ -116,7 +116,7 @@ export default function Home() {
         </div>
         {sites.length === 0 && (
           <div className="text-center py-12 text-neutral">
-            No sites configured yet.
+            No hay sitios configurados todavía.
           </div>
         )}
       </div>

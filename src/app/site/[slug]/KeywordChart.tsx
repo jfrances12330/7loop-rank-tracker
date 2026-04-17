@@ -41,7 +41,7 @@ export default function KeywordChart({ siteUrl, keywords }: Props) {
             <BarChart3 className="w-5 h-5 text-violet" />
           </div>
           <h3 className="text-lg font-bold text-gray-900 font-[Outfit]">
-            Position History
+            Historial de posiciones
           </h3>
         </div>
         <select
@@ -52,7 +52,7 @@ export default function KeywordChart({ siteUrl, keywords }: Props) {
           {keywords.map((k) => (
             <option key={k.keyword} value={k.keyword}>
               {k.keyword}{" "}
-              {k.position !== null ? `(pos ${k.position})` : ""}
+              {k.position !== null ? `(pos. ${k.position})` : ""}
             </option>
           ))}
         </select>
@@ -60,11 +60,11 @@ export default function KeywordChart({ siteUrl, keywords }: Props) {
 
       {loading ? (
         <div className="h-72 flex items-center justify-center text-neutral">
-          <div className="animate-pulse">Loading chart data...</div>
+          <div className="animate-pulse">Cargando datos del gráfico...</div>
         </div>
       ) : data.length === 0 ? (
         <div className="h-72 flex items-center justify-center text-neutral">
-          No historical data available
+          Sin datos históricos disponibles
         </div>
       ) : (
         <ResponsiveContainer width="100%" height={300}>
@@ -91,7 +91,7 @@ export default function KeywordChart({ siteUrl, keywords }: Props) {
               axisLine={false}
               tickLine={false}
               label={{
-                value: "Position",
+                value: "Posición",
                 angle: -90,
                 position: "insideLeft",
                 fill: "#6B7280",
@@ -108,10 +108,10 @@ export default function KeywordChart({ siteUrl, keywords }: Props) {
               }}
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               formatter={(value: any) => [
-                `Position ${value}`,
-                "Rank",
+                `Posición ${value}`,
+                "Ranking",
               ]}
-              labelFormatter={(label: any) => `Date: ${label}`}
+              labelFormatter={(label: any) => `Fecha: ${label}`}
             />
             <Line
               type="monotone"

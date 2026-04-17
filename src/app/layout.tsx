@@ -4,7 +4,7 @@ import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
   title: "7Loop SEO Tracker",
-  description: "Rank tracking dashboard by 7Loop",
+  description: "Panel de seguimiento SEO por 7Loop",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

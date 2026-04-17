@@ -13,13 +13,13 @@ export default function ScanButton({ site: _site }: { site?: string }) {
     try {
       const res = await triggerScan();
       if (res.status === "ok") {
-        setResult(`Scan complete. ${res.changes ?? 0} changes detected.`);
+        setResult(`Escaneo completado. ${res.changes ?? 0} cambios detectados.`);
         setTimeout(() => window.location.reload(), 2000);
       } else {
         setResult(`Error: ${res.status}`);
       }
     } catch {
-      setResult("Connection error");
+      setResult("Error de conexión");
     }
     setLoading(false);
   };
@@ -34,7 +34,7 @@ export default function ScanButton({ site: _site }: { site?: string }) {
         <RefreshCw
           className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
         />
-        {loading ? "Scanning..." : "Scan Now"}
+        {loading ? "Escaneando..." : "Escanear ahora"}
       </button>
       {result && (
         <span className="text-sm text-neutral font-medium">{result}</span>
