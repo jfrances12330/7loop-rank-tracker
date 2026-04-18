@@ -48,11 +48,10 @@ export default function CompetitorsPanel({ site, keyword }: Props) {
         <div className="p-6 text-center text-neutral text-sm">
           Aún no hay datos de competidores para esta keyword.
           <br />
-          Ejecuta un scan completo desde la terminal (
+          Pulsa "Escanear" para obtener datos de competidores.
           <code className="px-1 py-0.5 rounded bg-gray-100 text-xs">
-            python3 competitors_scanner.py
           </code>
-          ).
+          
         </div>
       ) : (
         <ol className="divide-y divide-gray-100">
