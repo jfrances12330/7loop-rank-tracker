@@ -399,3 +399,76 @@ export async function deleteTask(id: number) {
   });
   return res.json();
 }
+
+// ──────────────────────────────────────────────
+// Email Report
+// ──────────────────────────────────────────────
+
+export async function sendReportEmail(site: string, email: string) {
+  const res = await fetch(`${API}?endpoint=report/send`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site, email })
+  });
+  return res.json();
+}
+
+// ──────────────────────────────────────────────
+// Local Pack
+// ──────────────────────────────────────────────
+
+export interface LocalPackBusiness {
+  name: string;
+  rating: number | null;
+  reviews: number | null;
+  position: number;
+}
+
+export interface LocalPackEntry {
+  keyword: string;
+  city: string | null;
+  scan_date: string;
+  pack_position: number | null;
+  pack_total: number;
+  businesses: LocalPackBusiness[];
+}
+
+export async function getLocalPack(site: string): Promise<LocalPackEntry[]> {
+  return get('local-pack', { site });
+}
+
+// ──────────────────────────────────────────────
+// Onboarding — Añadir sitio
+// ──────────────────────────────────────────────
+
+export interface AuditResult {
+  status: 'idle' | 'running' | 'completed' | 'error';
+  progress?: string;
+  message?: string;
+  audit?: {
+    site_url: string;
+    client_name: string;
+    city: string;
+    meta_title: string | null;
+    meta_description: string | null;
+    h1: string | null;
+    robots_txt: boolean;
+    sitemap_xml: boolean;
+    pagespeed: number | null;
+    keywords_detected: string[];
+    keywords_added: number;
+  };
+}
+
+export async function addSite(url: string, client_name: string, city: string) {
+  const res = await fetch(`${API}?endpoint=sites/add`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, client_name, city })
+  });
+  return res.json();
+}
+
+export async function getAuditStatus(site: string): Promise<AuditResult> {
+  return get('sites/audit-status', { site });
+}

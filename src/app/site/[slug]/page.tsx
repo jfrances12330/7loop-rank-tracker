@@ -4,6 +4,7 @@ import ScanButton from "@/components/ScanButton";
 import DeviceToggle from "@/components/DeviceToggle";
 import CompetitorsPanel from "@/components/CompetitorsPanel";
 import LocalGridPanel from "@/components/LocalGridPanel";
+import LocalPackPanel from "@/components/LocalPackPanel";
 import RoiPanel from "@/components/RoiPanel";
 import ReportButton from "@/components/ReportButton";
 import CompetitorsComparison from "@/components/CompetitorsComparison";
@@ -749,6 +750,9 @@ export default function SitePage({ params }: Props) {
 
       {/* Competitors detail (top 10 per kw) */}
       <CompetitorsPanel site={site.site_url} keyword={selectedKeyword} />
+
+      {/* Local Pack */}
+      <LocalPackPanel site={site.site_url} />
 
       {/* Local grid */}
       <LocalGridPanel site={site.site_url} />
