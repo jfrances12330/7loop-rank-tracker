@@ -65,11 +65,6 @@ export default function Home() {
 
   return (
     <div className="p-4 md:p-6 lg:p-10 space-y-5 md:space-y-8">
-      {/* Logo centrado móvil */}
-      <div className="flex justify-center md:hidden mb-2 pt-2">
-        <img src="/icon-192.png" alt="7Loop" className="w-14 h-14 rounded-xl shadow-md" />
-      </div>
-
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
         <div>
