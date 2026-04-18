@@ -10,6 +10,10 @@ import ReportButton from "@/components/ReportButton";
 import CompetitorsComparison from "@/components/CompetitorsComparison";
 import ReviewsPanel from "@/components/ReviewsPanel";
 import TasksPanel from "@/components/TasksPanel";
+import GridMapPanel from "@/components/GridMapPanel";
+import AiVisibilityPanel from "@/components/AiVisibilityPanel";
+import NapPanel from "@/components/NapPanel";
+import GbpPostsPanel from "@/components/GbpPostsPanel";
 import {
   getSites,
   getKeywords,
@@ -754,11 +758,23 @@ export default function SitePage({ params }: Props) {
       {/* Local Pack */}
       <LocalPackPanel site={site.site_url} />
 
-      {/* Local grid */}
+      {/* Grid Map 3x3 visual */}
+      <GridMapPanel site={site.site_url} />
+
+      {/* Local grid (5 puntos legacy) */}
       <LocalGridPanel site={site.site_url} />
 
-      {/* Reviews */}
+      {/* Reviews con respuesta */}
       <ReviewsPanel site={site.site_url} />
+
+      {/* Visibilidad en IA */}
+      <AiVisibilityPanel site={site.site_url} />
+
+      {/* Directorios locales (NAP) */}
+      <NapPanel site={site.site_url} />
+
+      {/* Publicaciones Google Business */}
+      <GbpPostsPanel site={site.site_url} />
 
       {/* Tasks */}
       <TasksPanel site={site.site_url} />

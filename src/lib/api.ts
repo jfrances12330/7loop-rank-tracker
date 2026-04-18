@@ -472,3 +472,188 @@ export async function addSite(url: string, client_name: string, city: string) {
 export async function getAuditStatus(site: string): Promise<AuditResult> {
   return get('sites/audit-status', { site });
 }
+
+// ──────────────────────────────────────────────
+// Grid Map 3x3
+// ──────────────────────────────────────────────
+
+export interface GridMapPoint {
+  zone: string;
+  lat: number;
+  lon: number;
+  position: number | null;
+  business_name: string | null;
+}
+
+export interface GridMapCity {
+  city: string;
+  scan_date: string | null;
+  grid_size: number;
+  points: GridMapPoint[];
+}
+
+export interface GridMapResult {
+  site_url: string;
+  keyword: string;
+  cities: GridMapCity[];
+}
+
+export async function getGridMap(site: string, keyword: string, city?: string): Promise<GridMapResult> {
+  const params: Record<string, string> = { site, keyword };
+  if (city) params.city = city;
+  return get('grid-map', params);
+}
+
+// ──────────────────────────────────────────────
+// Reviews — reply
+// ──────────────────────────────────────────────
+
+export interface ReviewWithReply extends Review {
+  reply?: string | null;
+  reply_date?: string | null;
+}
+
+export async function replyToReview(reviewId: number, replyText: string) {
+  const res = await fetch(`${API}?endpoint=reviews/reply`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ review_id: reviewId, reply_text: replyText }),
+  });
+  return res.json();
+}
+
+// ──────────────────────────────────────────────
+// AI Visibility
+// ──────────────────────────────────────────────
+
+export interface AiPlatformEntry {
+  mentioned: boolean;
+  context: string | null;
+  scan_date: string;
+}
+
+export interface AiVisibilityRow {
+  keyword: string;
+  platforms: {
+    perplexity: AiPlatformEntry | null;
+    duckduckgo: AiPlatformEntry | null;
+    google_ai_overview: AiPlatformEntry | null;
+  };
+}
+
+export interface AiVisibilityResult {
+  site_url: string;
+  keywords: AiVisibilityRow[];
+}
+
+export async function getAiVisibility(site: string): Promise<AiVisibilityResult> {
+  return get('ai-visibility', { site });
+}
+
+export async function triggerAiScan(site: string) {
+  const res = await fetch(`${API}?endpoint=ai-visibility/scan`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site }),
+  });
+  return res.json();
+}
+
+// ──────────────────────────────────────────────
+// NAP — Directorios locales
+// ──────────────────────────────────────────────
+
+export interface NapListing {
+  directory: string;
+  name_found: string | null;
+  address_found: string | null;
+  phone_found: string | null;
+  name_match: number;
+  address_match: number;
+  phone_match: number;
+  url: string | null;
+  scan_date: string;
+}
+
+export interface NapResult {
+  site_url: string;
+  official: {
+    name: string | null;
+    address: string | null;
+    phone: string | null;
+  };
+  listings: NapListing[];
+  consistency_score: number;
+}
+
+export async function getNap(site: string): Promise<NapResult> {
+  return get('nap', { site });
+}
+
+export async function setNapConfig(site: string, name: string, address: string, phone: string) {
+  const res = await fetch(`${API}?endpoint=nap/config`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site, name, address, phone }),
+  });
+  return res.json();
+}
+
+export async function triggerNapScan(site: string) {
+  const res = await fetch(`${API}?endpoint=nap/scan`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site }),
+  });
+  return res.json();
+}
+
+// ──────────────────────────────────────────────
+// GBP Posts
+// ──────────────────────────────────────────────
+
+export interface GbpPost {
+  id: number;
+  text: string;
+  image_url: string | null;
+  cta_type: string | null;
+  status: string;
+  published_at: string | null;
+  created_at: string;
+}
+
+export interface GbpPostsResult {
+  site_url: string;
+  posts: GbpPost[];
+}
+
+export async function getGbpPosts(site: string): Promise<GbpPostsResult> {
+  return get('gbp/posts', { site });
+}
+
+export async function createGbpPost(site: string, text: string, imageUrl?: string, ctaType?: string) {
+  const res = await fetch(`${API}?endpoint=gbp/posts/create`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site, text, image_url: imageUrl, cta_type: ctaType }),
+  });
+  return res.json();
+}
+
+export async function deleteGbpPost(id: number) {
+  const res = await fetch(`${API}?endpoint=gbp/posts/delete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id }),
+  });
+  return res.json();
+}
+
+export async function suggestGbpPost(site: string): Promise<{ text: string; brand: string; city: string; keyword: string }> {
+  const res = await fetch(`${API}?endpoint=gbp/suggest`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ site }),
+  });
+  return res.json();
+}
